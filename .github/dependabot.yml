@@ -4,6 +4,10 @@ updates:
     directory: /
     schedule:
       interval: daily
+    # Desactive les PR de mise a jour de version classiques pour isoler le
+    # test sur les PR de securite groupees (GRAPHQL-3251). Les security
+    # updates ne sont pas soumises a cette limite (doc GitHub).
+    open-pull-requests-limit: 0
     groups:
       security-patch-minor:
         applies-to: security-updates
