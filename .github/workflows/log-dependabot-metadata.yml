@@ -1,0 +1,30 @@
+name: Log dependabot metadata
+
+# GRAPHQL-3135 / GRAPHQL-3251 : n'auto-merge rien, se contente de journaliser
+# tous les outputs de dependabot/fetch-metadata sur une PR Dependabot pour
+# verifier si `dependency-group` est bien peuple sur une PR de securite.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  log-metadata:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Dump all outputs
+        run: |
+          cat <<'JSON'
+          ${{ toJSON(steps.metadata.outputs) }}
+          JSON
