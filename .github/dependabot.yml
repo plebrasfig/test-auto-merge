@@ -4,10 +4,16 @@ updates:
     directory: /
     schedule:
       interval: daily
-    # Desactive les PR de mise a jour de version classiques pour isoler le
-    # test sur les PR de securite groupees (GRAPHQL-3251). Les security
-    # updates ne sont pas soumises a cette limite (doc GitHub).
-    open-pull-requests-limit: 0
+    # Bloque les mises a jour de version pour lodash (ignore ne s'applique
+    # qu'aux version-updates, pas aux security-updates) pour isoler le test
+    # sur la PR de securite groupee (GRAPHQL-3251), sans toucher au reste
+    # du mecanisme dependabot comme le faisait open-pull-requests-limit: 0.
+    ignore:
+      - dependency-name: "lodash"
+        update-types:
+          - "version-update:semver-patch"
+          - "version-update:semver-minor"
+          - "version-update:semver-major"
     groups:
       security-patch-minor:
         applies-to: security-updates
